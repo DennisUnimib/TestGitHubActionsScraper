@@ -1,9 +1,9 @@
 name: TrovaCasa Scraper to GitHub Releases
 
 on:
-  # Esecuzione automatica ogni giorno alle 8:00 UTC (9:00/10:00 in Italia)
+  # Esecuzione automatica ogni giorno alle 17:30 UTC (19:30 ora legale ITALIA CEST)
   schedule:
-    - cron: '0 8 * * *'
+    - cron: '30 17 * * *'
   
   # Permetti esecuzione manuale
   workflow_dispatch:

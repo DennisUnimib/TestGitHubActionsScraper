@@ -9,7 +9,7 @@ Scraper automatico per raccogliere URL degli annunci immobiliari di Milano da Tr
 - ✅ **Esecuzione cloud** gratuita con GitHub Actions
 - ✅ **Export CSV** con timestamp
 - ✅ **Esecuzione manuale** quando necessario
-
+<!--
 ## 🚀 Come Funziona
 
 1. **GitHub Actions** esegue lo scraper ogni giorno
@@ -85,4 +85,4 @@ Questo strumento è creato esclusivamente per scopi educativi e di ricerca. Assi
 
 - Repository **privato** = dati completamente privati
 - Repository **pubblico** = releases pubblici ma configurabili
-- Nessun dato sensibile salvato nei logs
+- Nessun dato sensibile salvato nei logs -->

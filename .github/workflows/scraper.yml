@@ -1,0 +1,122 @@
+name: TrovaCasa Scraper to GitHub Releases
+
+on:
+  # Esecuzione automatica ogni giorno alle 17:30 UTC (19:30 ora legale ITALIA CEST)
+  schedule:
+    - cron: '30 17 * * *'
+  
+  # Permetti esecuzione manuale
+  workflow_dispatch:
+    inputs:
+      max_pages:
+        description: 'Numero massimo di pagine da scaricare (0 = tutte)'
+        required: false
+        default: '5'
+        type: string
+
+jobs:
+  scrape-and-release:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write  # Necessario per creare releases
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run scraper
+      env:
+        MAX_PAGES: ${{ github.event.inputs.max_pages || '5' }}
+      run: |
+        python scraper_v1.py
+    
+    - name: Get CSV filename and timestamp
+      id: file_info
+      run: |
+        if [ -f csv_filename.txt ]; then
+          CSV_FILE=$(cat csv_filename.txt)
+          echo "csv_file=$CSV_FILE" >> $GITHUB_OUTPUT
+          
+          # Estrai timestamp dal nome file
+          TIMESTAMP=$(echo $CSV_FILE | grep -o '[0-9]\{8\}_[0-9]\{6\}' | head -1)
+          echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
+          
+          # Conta gli annunci nel CSV (escludendo header)
+          if [ -f "$CSV_FILE" ]; then
+            ANNUNCI_COUNT=$(($(wc -l < "$CSV_FILE") - 1))
+            echo "annunci_count=$ANNUNCI_COUNT" >> $GITHUB_OUTPUT
+          else
+            echo "annunci_count=0" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "❌ File CSV non trovato"
+          exit 1
+        fi
+    
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: scraping-${{ steps.file_info.outputs.timestamp }}
+        release_name: 🏠 TrovaCasa Milano - ${{ steps.file_info.outputs.timestamp }}
+        body: |
+          # 📊 Scraping TrovaCasa Milano
+          
+          **📅 Data estrazione**: ${{ steps.file_info.outputs.timestamp }}  
+          **🏠 Annunci trovati**: ${{ steps.file_info.outputs.annunci_count }}  
+          **🎯 Città**: Milano  
+          **🌐 Fonte**: trovacasa.it  
+          
+          ## 📋 Contenuto
+          Il file CSV allegato contiene tutti gli URL degli annunci immobiliari di Milano trovati su TrovaCasa.it al momento dell'estrazione.
+          
+          ## 📥 Come utilizzare
+          1. Scarica il file CSV allegato
+          2. Apri con Excel, Google Sheets o qualsiasi editor CSV
+          3. Ogni riga contiene un URL di un annuncio immobiliare
+          
+          ---
+          *Generato automaticamente da GitHub Actions*
+        draft: false
+        prerelease: false
+    
+    - name: Upload CSV to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./${{ steps.file_info.outputs.csv_file }}
+        asset_name: trovacasa_milano_${{ steps.file_info.outputs.timestamp }}.csv
+        asset_content_type: text/csv
+    
+    - name: Cleanup
+      run: |
+        rm -f *.csv csv_filename.txt
+    
+    - name: Log success
+      run: |
+        echo "✅ Scraping completato con successo!"
+        echo "📊 Annunci trovati: ${{ steps.file_info.outputs.annunci_count }}"
+        echo "🔗 Release creata: https://github.com/${{ github.repository }}/releases/tag/scraping-${{ steps.file_info.outputs.timestamp }}"

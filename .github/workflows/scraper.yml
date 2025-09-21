@@ -36,14 +36,14 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-completo-${{ hashFiles('**/requirements_completo.txt') }}
+        key: ${{ runner.os }}-pip-completo-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-completo-
     
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements_completo.txt
+        pip install -r requirements.txt
     
     - name: Run complete scraper
       env:

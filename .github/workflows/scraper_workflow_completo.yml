@@ -4,7 +4,7 @@ on:
   # Esecuzione automatica ogni giorno alle 6:00 UTC (7:00/8:00 in Italia)
   # Orario anticipato perché questo workflow richiede più tempo
   schedule:
-    - cron: '30 18 * * *'
+    - cron: '07 19 * * *'
   
   # Permetti esecuzione manuale
   workflow_dispatch:

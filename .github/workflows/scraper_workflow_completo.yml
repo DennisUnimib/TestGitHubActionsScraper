@@ -47,7 +47,7 @@ jobs:
     
     - name: Run complete scraper
       env:
-        MAX_PAGES: ${{ github.event.inputs.max_pages || '3' }}
+        MAX_PAGES: ${{ github.event.inputs.max_pages || '0' }}
       run: |
         echo "🚀 Avvio scraping completo con MAX_PAGES=$MAX_PAGES"
         python scraper_completo.py

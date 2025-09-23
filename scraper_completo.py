@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 base_url = "https://www.trovacasa.it"
 start_url = f"{base_url}/case-in-vendita/milano"
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"}
-MAX_CONCURRENT_REQUESTS = 4  # Ridotto per GitHub Actions
+MAX_CONCURRENT_REQUESTS = 4  # Ridotto per GitHub Actions (inizialmente ridotto a 8 ma si bloccava)
 oggi = datetime.today().strftime("%Y-%m-%d")
 
 # -----------------------

@@ -105,32 +105,10 @@ jobs:
           **🎯 Città**: Milano  
           **🌐 Fonte**: trovacasa.it  
           
-          ## 📋 Dati Inclusi
-          Il file CSV contiene informazioni dettagliate per ogni annuncio:
-          - 🔗 **URL** dell'annuncio
-          - 💰 **Prezzo** 
-          - 🏠 **Titolo** e descrizione
-          - 📍 **Indirizzo**
-          - 📐 **Superficie** (m²)
-          - 🚪 **Numero locali**
-          - 🚿 **Numero bagni**
-          - ⚡ **Classe energetica**
-          - 🏷️ **Tag** caratteristiche
-          - 📅 **Date** di monitoraggio
-          
-          ## 📥 Come utilizzare
-          1. Scarica il file CSV allegato
-          2. Apri con Excel, Google Sheets o qualsiasi editor CSV
-          3. **Separatore**: punto e virgola (;)
-          4. **Encoding**: UTF-8
-          
           ## 📊 Formato Dati
           ```
           _id;url;prezzo;titolo;indirizzo;superficie_m2;num_locali;num_bagni;classe_ener;tags;attivo;data_comparsa;data_aggiornamento;data_scomparsa
           ```
-          
-          ---
-          *⚡ Scraping completo generato automaticamente da GitHub Actions*
         draft: false
         prerelease: false
     

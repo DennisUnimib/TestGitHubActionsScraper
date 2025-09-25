@@ -34,21 +34,10 @@ oggi = datetime.today().strftime("%Y-%m-%d")
 def setup_gcs_client():
     """Configura il client Google Cloud Storage usando le credenziali da GitHub Secrets"""
     try:
-        # In GitHub Actions, le credenziali sono passate come variabile d'ambiente
-        service_account_info = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_JSON')
-        if service_account_info:
-            # Parse delle credenziali JSON
-            credentials_dict = json.loads(service_account_info)
-            
-            # Crea un file temporaneo per le credenziali
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
-                json.dump(credentials_dict, f)
-                credentials_file = f.name
-            
-            # Imposta la variabile d'ambiente per la libreria GCS
-            os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_file
-            
-            logger.info("✅ Credenziali GCS configurate correttamente")
+        # Verifica se il file delle credenziali esiste (impostato dal workflow)
+        credentials_file = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+        if credentials_file and os.path.exists(credentials_file):
+            logger.info(f"✅ Usando file credenziali: {credentials_file}")
         else:
             logger.info("🔧 Usando credenziali GCS di default dell'ambiente")
         

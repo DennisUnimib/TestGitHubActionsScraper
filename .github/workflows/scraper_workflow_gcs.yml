@@ -17,7 +17,7 @@ on:
 jobs:
   scrape-to-gcs:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 180 # Tempo di timeout di 3 ore
     
     steps:
     - name: Checkout repository
@@ -61,7 +61,7 @@ jobs:
     
     - name: Run scraper with GCS upload
       env:
-        MAX_PAGES: ${{ github.event.inputs.max_pages || '0' }}
+        MAX_PAGES: ${{ github.event.inputs.max_pages || '0' }} # Se non viene specificato un numero di pagine massimo esegue scraping su tutte le pagine (valore 0)
       run: |
         echo "🚀 Avvio scraping con upload su GCS"
         echo "📊 MAX_PAGES: $MAX_PAGES"

@@ -1,7 +1,7 @@
 name: TrovaCasa Scraper Completo
 
 on:
-  # Esecuzione automatica ogni giorno alle 6:00 UTC (7:00/8:00 in Italia)
+  # Esecuzione automatica ogni giorno alle 19:30 UTC (20:00/21:00 in Italia)
   # Orario anticipato perché questo workflow richiede più tempo
   schedule:
     - cron: '30 19 */2 * *'
@@ -18,7 +18,7 @@ on:
 jobs:
   scrape-complete-data:
     runs-on: ubuntu-latest
-    timeout-minutes: 120  # Timeout di 2 ore per scraping completo
+    timeout-minutes: 180  # Timeout di 3 ore per scraping completo
     
     permissions:
       contents: write  # Necessario per creare releases

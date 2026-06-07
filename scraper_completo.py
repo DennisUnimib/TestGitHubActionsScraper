@@ -21,7 +21,19 @@ logger = logging.getLogger(__name__)
 # -----------------------
 base_url = "https://www.trovacasa.it"
 start_url = f"{base_url}/case-in-vendita/milano"
-headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"}
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "Accept-Language": "it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-User": "?1",
+    "Cache-Control": "max-age=0",
+}
 MAX_CONCURRENT_REQUESTS = 4  # Ridotto per GitHub Actions (inizialmente ridotto a 8 ma si bloccava)
 oggi = datetime.today().strftime("%Y-%m-%d")
 
@@ -31,7 +43,7 @@ oggi = datetime.today().strftime("%Y-%m-%d")
 async def scarica_pagina(session, url, numero_pagina):
     logger.info(f"📄 Scarico pagina {numero_pagina}")
     try:
-        async with session.get(url, headers=headers, timeout=30) as response:
+        async with session.get(url, headers=headers) as response:
             if response.status != 200:
                 logger.warning(f"⚠️ Errore HTTP {response.status} per pagina {numero_pagina}")
                 return None, None
@@ -92,7 +104,7 @@ async def get_urls(max_pagine=None):
 async def estrai_annuncio(session, url, semaforo, progress_counter):
     async with semaforo:
         try:
-            async with session.get(url, headers=headers, timeout=30) as response:
+            async with session.get(url, headers=headers) as response:
                 if response.status != 200:
                     return None
                 html = await response.text()
